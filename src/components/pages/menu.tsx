@@ -15,7 +15,7 @@ export function Menu() {
     name: "",
   });
   return (
-    <div className="flex flex-col justify-center items-center w-screen h-screen">
+    <div className="flex flex-col justify-center items-center w-full h-screen">
       <Paragraph text="Enter player name" size="large" />
       <Input
         className="mt-2"

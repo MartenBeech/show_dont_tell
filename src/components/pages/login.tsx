@@ -35,7 +35,7 @@ export function Login(props: loginProps) {
   };
 
   return (
-    <div className="flex w-screen h-screen justify-center items-center">
+    <div className="flex w-full h-screen justify-center items-center">
       <form
         className="flex flex-col w-full items-center"
         onSubmit={(event) => {

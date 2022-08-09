@@ -16,7 +16,7 @@ export function Player(props: playerProps) {
   const [state, setState] = useState<state>({ prompt: "", imageUrl: "" });
 
   return props.gameStarted ? (
-    <div className="flex flex-col items-center w-screen mt-20">
+    <div className="flex flex-col items-center w-full mt-20">
       <Paragraph className="mr-8 ml-8" text="Paste image URL here" />
       <Input
         className="mt-2"
@@ -39,7 +39,7 @@ export function Player(props: playerProps) {
       )}
     </div>
   ) : (
-    <div className="flex flex-col justify-center items-center w-screen h-screen">
+    <div className="flex flex-col justify-center items-center w-full h-screen">
       <Paragraph
         className="mr-8 ml-8"
         text="Add your own prompts while waiting for the game to start"

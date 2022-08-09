@@ -32,7 +32,7 @@ export function Host(props: hostProps) {
   return props.gameStarted ? (
     <></>
   ) : (
-    <div className="flex flex-col justify-center items-center w-screen h-screen">
+    <div className="flex flex-col justify-center items-center w-full h-screen">
       <Paragraph
         className="mb-2"
         text={`Players: ${state.players.length}`}
