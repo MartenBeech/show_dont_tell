@@ -19,7 +19,6 @@ export function Menu() {
   });
   return (
     <div className="flex flex-col justify-center items-center w-full h-screen">
-      <Icon className="mb-12" />
       <Paragraph text="Enter player name" size="large" />
       <Input
         className="mt-2"
