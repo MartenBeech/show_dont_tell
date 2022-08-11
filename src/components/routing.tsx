@@ -11,19 +11,10 @@ export function Routing() {
         <Route path="/" element={<Menu />} />
       </Routes>
       <Routes>
-        <Route
-          path="/player-waiting"
-          element={<Player gameStarted={false} />}
-        />
+        <Route path="/player" element={<Player />} />
       </Routes>
       <Routes>
-        <Route path="/player" element={<Player gameStarted />} />
-      </Routes>
-      <Routes>
-        <Route path="/host-waiting" element={<Host gameStarted={false} />} />
-      </Routes>
-      <Routes>
-        <Route path="/host" element={<Host gameStarted />} />
+        <Route path="/host" element={<Host />} />
       </Routes>
     </BrowserRouter>
   );

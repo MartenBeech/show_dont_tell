@@ -1,20 +1,21 @@
 import { doc, getDoc, collection, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./auth";
+import { RoomName } from "../components/pages/login";
 
 export interface Room {
-  roomName: string;
-  prompts: Array<string>;
-  players: Array<string>;
+  gameStarted: boolean;
+  gameVoting: boolean;
+  imageWinning: number;
   images: Array<string>;
-}
-
-interface getRoomProps {
+  playerTurn: number;
+  players: Array<string>;
+  prompts: Array<string>;
   roomName: string;
 }
 
-export async function GetRoom(props: getRoomProps): Promise<Room> {
+export async function GetRoom(): Promise<Room> {
   let returnValue: Room;
-  const docRef = doc(db, "rooms", props.roomName);
+  const docRef = doc(db, "rooms", RoomName);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -24,29 +25,31 @@ export async function GetRoom(props: getRoomProps): Promise<Room> {
   return returnValue;
 }
 
-interface createRoomProps {
-  roomName: string;
-}
-
-export async function CreateRoom(props: createRoomProps) {
+export async function CreateRoom() {
   const colRef = collection(db, "rooms");
-  const room = await GetRoom({ roomName: props.roomName });
+  const room = await GetRoom();
 
   if (!room) {
-    await setDoc(doc(colRef, props.roomName), {
-      roomName: props.roomName,
+    await setDoc(doc(colRef, RoomName), {
+      gameStarted: false,
+      gameVoting: false,
+      imageWinning: -1,
+      images: [],
+      playerTurn: -1,
+      players: [],
+      prompts: ["prompt 1", "prompt 2", "prompt 3"],
+      roomName: RoomName,
     });
   }
 }
 
 interface loginPlayerProps {
-  roomName: string;
   playerName: string;
 }
 
 export async function LoginPlayer(props: loginPlayerProps) {
   const colRef = collection(db, "rooms");
-  const room = await GetRoom({ roomName: props.roomName });
+  const room = await GetRoom();
 
   let players: Array<string>;
   if (room.players) {
@@ -56,43 +59,106 @@ export async function LoginPlayer(props: loginPlayerProps) {
     players = [props.playerName];
   }
 
-  await updateDoc(doc(colRef, props.roomName), {
+  await updateDoc(doc(colRef, RoomName), {
     players: players,
   });
+
+  return players.length - 1;
 }
 
 interface createPrompt {
-  roomName: string;
   prompt: string;
 }
 
-export async function CreatePrompt(props: createPrompt) {
+export async function SubmitPrompt(props: createPrompt) {
   const colRef = collection(db, "rooms");
-  const room = await GetRoom({ roomName: props.roomName });
+  const room = await GetRoom();
 
   let prompts: Array<string>;
   if (room.prompts) {
-    prompts = room.players;
+    prompts = room.prompts;
     prompts.push(props.prompt);
   } else {
     prompts = [props.prompt];
   }
 
-  await updateDoc(doc(colRef, props.roomName), {
+  await updateDoc(doc(colRef, RoomName), {
     prompts: prompts,
   });
 }
 
-interface getPromptsProps {
-  roomName: string;
+export async function StartGame() {
+  const colRef = collection(db, "rooms");
+
+  await updateDoc(doc(colRef, RoomName), {
+    gameStarted: true,
+  });
+
+  NewPlayerTurn();
 }
 
-export async function GetPrompts(props: getPromptsProps) {
-  const room = await GetRoom({ roomName: props.roomName });
+export async function StartVoting() {
+  const colRef = collection(db, "rooms");
 
-  const defaultPrompts = ["Prompt 1", "Prompt 2", "Prompt 3"];
+  await updateDoc(doc(colRef, RoomName), {
+    gameVoting: true,
+  });
+}
 
-  defaultPrompts.push(...room.prompts);
+interface submitImageProps {
+  player: string;
+  image: string;
+}
 
-  return defaultPrompts;
+export async function SubmitImage(props: submitImageProps) {
+  const colRef = collection(db, "rooms");
+  const room = await GetRoom();
+
+  let playerIndex: number;
+  room.players.map((player, index) => {
+    if (player === props.player) {
+      playerIndex = index;
+    }
+  });
+
+  if (playerIndex != undefined) {
+    const images = [...room.images];
+    images[playerIndex] = props.image;
+    await updateDoc(doc(colRef, RoomName), {
+      images: images,
+    });
+  }
+}
+
+export async function NewPlayerTurn() {
+  const colRef = collection(db, "rooms");
+  const room = await GetRoom();
+  let playerTurn = room.playerTurn + 1;
+  if (playerTurn >= room.players.length) {
+    playerTurn = 0;
+  }
+
+  const images: Array<string> = [];
+  for (let i = 0; i < room.players.length; i++) {
+    images.push("");
+  }
+
+  await updateDoc(doc(colRef, RoomName), {
+    playerTurn: playerTurn,
+    images: images,
+    gameVoting: false,
+    imageWinning: -1,
+  });
+}
+
+interface setImageWinningProps {
+  imageWinning: number;
+}
+
+export async function SetImageWinning(props: setImageWinningProps) {
+  const colRef = collection(db, "rooms");
+
+  await updateDoc(doc(colRef, RoomName), {
+    imageWinning: props.imageWinning,
+  });
 }

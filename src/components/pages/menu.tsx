@@ -4,7 +4,9 @@ import { Input } from "../input";
 import { Paragraph } from "../paragraph";
 import { Link } from "react-router-dom";
 import { LoginPlayer } from "../../rest/room";
-import { RoomName } from "./login";
+
+export let PlayerName: string;
+export let PlayerId: number;
 
 interface state {
   name: string;
@@ -26,22 +28,22 @@ export function Menu() {
       />
       <div className="mt-12" />
       <Link
-        className="flex w-full justify-center"
-        to={state.name.length ? "/player-waiting" : "/"}
+        className="flex w-1/2 justify-center"
+        to={state.name.length ? "/player" : "/"}
       >
         <Button
           text="Join as player"
           size="large"
           disabled={!state.name.length}
-          onClick={() => {
-            LoginPlayer({ playerName: state.name, roomName: RoomName });
+          onClick={async () => {
+            PlayerName = state.name;
+            PlayerId = await LoginPlayer({ playerName: state.name });
           }}
-          width="1/2"
         />
       </Link>
       <div className="mt-8" />
-      <Link className="flex w-full justify-center" to={"/host-waiting"}>
-        <Button text="Host screen" width="1/2" />
+      <Link className="flex w-1/2 justify-center" to={"/host"}>
+        <Button text="Host screen" />
       </Link>
     </div>
   );

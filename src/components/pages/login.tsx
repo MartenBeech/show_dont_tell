@@ -27,7 +27,7 @@ export function Login(props: loginProps) {
       const buff = buffer.Buffer.from(`${password}`).toString("base64");
       const basicAuth = `Basic ${buff}`;
       RoomName = roomName;
-      CreateRoom({ roomName: RoomName });
+      CreateRoom();
 
       const token = basicAuth;
       props.setToken(token);

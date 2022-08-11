@@ -6,6 +6,9 @@ module.exports = {
       colors: {
         "custom-blue": "#363EB0",
       },
+      fontFamily: {
+        cambria: ["Cambria"],
+      },
     },
   },
   plugins: [],

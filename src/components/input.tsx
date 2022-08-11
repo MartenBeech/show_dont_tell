@@ -6,6 +6,7 @@ interface inputProps {
   placeholder?: string;
   size?: "large" | "small";
   password?: boolean;
+  value?: string;
 }
 
 export function Input(props: inputProps) {
@@ -23,6 +24,7 @@ export function Input(props: inputProps) {
       onChange={props.onChange}
       placeholder={props.placeholder}
       type={props.password ? "password" : ""}
+      value={props.value}
     />
   );
 }

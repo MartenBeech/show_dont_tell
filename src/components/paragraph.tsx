@@ -3,14 +3,16 @@ import React from "react";
 interface paragraphProps {
   className?: string;
   text: string;
-  size?: "large" | "small";
+  size?: "xl" | "large" | "small";
 }
 
 export function Paragraph(props: paragraphProps) {
   return (
     <h1
-      className={`${props.className} ${
-        props.size === "large"
+      className={`${props.className} font-cambria ${
+        props.size === "xl"
+          ? "text-4xl"
+          : props.size === "large"
           ? "text-2xl"
           : props.size === "small"
           ? "text-lg"
