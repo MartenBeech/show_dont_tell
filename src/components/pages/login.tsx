@@ -5,6 +5,7 @@ import { Paragraph } from "../paragraph";
 import { Input } from "../input";
 import { Button } from "../button";
 import { CreateRoom } from "../../rest/room";
+import { Icon } from "../icon";
 
 export let RoomName = "";
 
@@ -42,6 +43,8 @@ export function Login(props: loginProps) {
           handleSubmit(event);
         }}
       >
+        <Paragraph className="mb-12" text="SHOW DON'T TELL" size="xl" />
+        <Icon className="mb-12" />
         <Paragraph text="Room name" size="large" />
         <Input className="mt-2" onChange={(e) => setRoomName(e.target.value)} />
         <Paragraph className="mt-8" text="Password" size="large" />

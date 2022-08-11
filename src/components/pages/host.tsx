@@ -161,12 +161,12 @@ export function Host() {
     <div className="flex flex-col justify-center items-center w-full h-screen">
       <Paragraph
         className="mb-2"
-        text={`Players: ${state.players.length}`}
+        text={`Players in lobby: ${state.players.length}`}
         size="large"
       />
       <Link className="flex w-4/5 justify-center" to={"/host"}>
         <Button
-          text="Start"
+          text="Start game"
           size="large"
           onClick={() => {
             prompts = [...state.prompts];

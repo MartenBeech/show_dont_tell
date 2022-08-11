@@ -31,7 +31,7 @@ export function App() {
   }
 
   return (
-    <div className="flex justify-center bg-background">
+    <div className="flex justify-center">
       <div
         className={
           screenSize === ScreenSize.small
@@ -43,11 +43,11 @@ export function App() {
             : ""
         }
       >
-        <div className="border-l border-r">
+        <div className="border-l border-r bg-custom-gray">
           {!token ? (
             <Login setToken={setToken} />
           ) : (
-            <div className="min-h-screen bg-background">
+            <div className="h-screen bg-custom-gray">
               <Routing />
             </div>
           )}

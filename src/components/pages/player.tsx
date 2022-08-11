@@ -10,6 +10,7 @@ import {
   NewPlayerTurn,
 } from "../../rest/room";
 import { Button } from "../button";
+import { Icon } from "../icon";
 import { Input } from "../input";
 import { Paragraph } from "../paragraph";
 import { RoomName } from "./login";
@@ -90,9 +91,9 @@ export function Player() {
   });
 
   return (
-    <>
+    <div className="h-full">
       <Paragraph
-        className="flex justify-center mt-2"
+        className="flex justify-center pt-2 mb-20"
         text={PlayerName}
         size="small"
       />
@@ -125,11 +126,12 @@ export function Player() {
                   })}
                 </div>
               ) : (
-                <div className="flex flex-col justify-center items-center w-full h-screen">
+                <div className="flex flex-col justify-center items-center w-full">
+                  <Icon className="mb-20" />
                   <Button
                     text="Start voting"
                     size="large"
-                    width="1/2"
+                    width="2/3"
                     onClick={() => {
                       StartVoting();
                     }}
@@ -143,6 +145,7 @@ export function Player() {
                 <Paragraph
                   className="flex justify-center w-4/5"
                   text="Waiting for other players"
+                  size="large"
                 />
               ) : (
                 <>
@@ -153,7 +156,7 @@ export function Player() {
                       setState({ ...state, imageUrl: event.target.value });
                     }}
                     placeholder="www.google.com/image-url"
-                    size="small"
+                    size="xs"
                     value={state.imageUrl}
                   />
                   <div className="flex justify-center mt-4 w-full">
@@ -179,7 +182,8 @@ export function Player() {
           )}
         </>
       ) : (
-        <div className="flex flex-col justify-center items-center w-full h-screen">
+        <div className="flex flex-col justify-center items-center w-full">
+          <Icon className="mb-20" />
           <Paragraph
             className="w-4/5"
             text="Add your own prompts while waiting for the game to start"
@@ -189,12 +193,13 @@ export function Player() {
             onChange={(event) => {
               setState({ ...state, prompt: event.target.value });
             }}
-            placeholder="E.g. 'Describe Denmark with one image'"
-            size="small"
+            placeholder="E.g. 'Where do you see this player in 10 years?'"
+            size="xs"
             value={state.prompt}
           />
           <div className="flex justify-center mt-4 w-full">
             <Button
+              className="mb-16"
               text="Submit prompt"
               size="small"
               disabled={!state.prompt.length}
@@ -207,6 +212,6 @@ export function Player() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

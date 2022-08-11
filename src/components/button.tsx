@@ -14,7 +14,7 @@ export function Button(props: buttonProps) {
     <button
       className={`${
         props.className
-      } border rounded-lg bg-custom-blue text-white w-${
+      } border rounded-lg bg-custom-blue text-white font-cambria w-${
         props.width || "full"
       } ${
         props.size === "large"

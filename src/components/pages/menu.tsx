@@ -4,6 +4,7 @@ import { Input } from "../input";
 import { Paragraph } from "../paragraph";
 import { Link } from "react-router-dom";
 import { LoginPlayer } from "../../rest/room";
+import { Icon } from "../icon";
 
 export let PlayerName: string;
 export let PlayerId: number;
@@ -18,6 +19,7 @@ export function Menu() {
   });
   return (
     <div className="flex flex-col justify-center items-center w-full h-screen">
+      <Icon className="mb-12" />
       <Paragraph text="Enter player name" size="large" />
       <Input
         className="mt-2"

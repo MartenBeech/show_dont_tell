@@ -4,7 +4,7 @@ interface inputProps {
   className?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
-  size?: "large" | "small";
+  size?: "large" | "small" | "xs";
   password?: boolean;
   value?: string;
 }
@@ -19,6 +19,8 @@ export function Input(props: inputProps) {
           ? "text-xl"
           : props.size === "small"
           ? ""
+          : props.size === "xs"
+          ? "text-sm"
           : "text-lg"
       } `}
       onChange={props.onChange}

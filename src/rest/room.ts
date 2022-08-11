@@ -25,24 +25,6 @@ export async function GetRoom(): Promise<Room> {
   return returnValue;
 }
 
-export async function CreateRoom() {
-  const colRef = collection(db, "rooms");
-  const room = await GetRoom();
-
-  if (!room) {
-    await setDoc(doc(colRef, RoomName), {
-      gameStarted: false,
-      gameVoting: false,
-      imageWinning: -1,
-      images: [],
-      playerTurn: -1,
-      players: [],
-      prompts: ["prompt 1", "prompt 2", "prompt 3"],
-      roomName: RoomName,
-    });
-  }
-}
-
 interface loginPlayerProps {
   playerName: string;
 }
@@ -161,4 +143,28 @@ export async function SetImageWinning(props: setImageWinningProps) {
   await updateDoc(doc(colRef, RoomName), {
     imageWinning: props.imageWinning,
   });
+}
+
+export async function CreateRoom() {
+  const colRef = collection(db, "rooms");
+  const room = await GetRoom();
+
+  if (!room) {
+    await setDoc(doc(colRef, RoomName), {
+      gameStarted: false,
+      gameVoting: false,
+      imageWinning: -1,
+      images: [],
+      playerTurn: -1,
+      players: [],
+      prompts: [
+        "What tattoo could you imagine this player getting?",
+        "Where do you see this player in 10 years?",
+        "What could be this player's favorite hobby?",
+        "Describe this player's home country with one image",
+        "How would this player dress up before a date?",
+      ],
+      roomName: RoomName,
+    });
+  }
 }

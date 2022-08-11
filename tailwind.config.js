@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         "custom-blue": "#363EB0",
+        "custom-gray": "#F4F4F4",
       },
       fontFamily: {
         cambria: ["Cambria"],
