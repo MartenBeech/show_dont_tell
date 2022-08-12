@@ -147,7 +147,7 @@ export function Host() {
           <Paragraph className="mb-40" text={state.prompt} size="xl" />
           <Paragraph
             className="mb-8"
-            text={`${state.players[state.playerTurn]} is voting`}
+            text={`${state.players[state.playerTurn]} is the judge`}
             size="xl"
           />
           <Paragraph

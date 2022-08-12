@@ -37,30 +37,39 @@ export function Login(props: loginProps) {
 
   return (
     <div className="flex w-full h-screen justify-center items-center">
-      <form
-        className="flex flex-col w-full items-center"
-        onSubmit={(event) => {
-          handleSubmit(event);
-        }}
-      >
-        <Paragraph className="mb-12" text="SHOW DON'T TELL" size="xl" />
-        <Icon className="mb-12" />
+      <div className="flex flex-col w-full items-center">
+        <Paragraph className="mb-4" text="SHOW DON'T TELL" size="xl" />
+        <Icon className="mb-8" />
         <Paragraph text="Room name" size="large" />
-        <Input className="mt-2" onChange={(e) => setRoomName(e.target.value)} />
-        <Paragraph className="mt-8" text="Password" size="large" />
         <Input
           className="mt-2"
-          password
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setRoomName(e.target.value)}
+          value={roomName}
         />
-        <Button
-          className="mt-8"
-          text="Log in"
-          size="small"
-          width="1/2"
-          disabled={!roomName || !password}
-        />
-      </form>
+        <form
+          className="flex flex-col items-center w-full"
+          onSubmit={(event) => {
+            handleSubmit(event);
+          }}
+        >
+          <Paragraph className="mt-8" text="Password" size="large" />
+
+          <Input
+            className="mt-2"
+            password
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
+
+          <Button
+            className="mt-8"
+            text="Log in"
+            size="small"
+            width="1/2"
+            disabled={!roomName || !password}
+          />
+        </form>
+      </div>
     </div>
   );
 }

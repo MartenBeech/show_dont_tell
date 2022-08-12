@@ -158,11 +158,11 @@ export async function CreateRoom() {
       playerTurn: -1,
       players: [],
       prompts: [
-        "What tattoo could you imagine this player getting?",
-        "Where do you see this player in 10 years?",
-        "What could be this player's favorite hobby?",
-        "Describe this player's home country with one image",
-        "How would this player dress up before a date?",
+        "What tattoo could you imagine the judge getting?",
+        "Where do you see the judge in 10 years?",
+        "What could be the judge's favorite hobby?",
+        "Describe the judge's home country with one image",
+        "How would the judge dress up before a date?",
       ],
       roomName: RoomName,
     });

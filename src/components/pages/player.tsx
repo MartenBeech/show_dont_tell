@@ -93,7 +93,7 @@ export function Player() {
   return (
     <div className="h-full">
       <Paragraph
-        className="flex justify-center pt-2 mb-20"
+        className="flex justify-center pt-2 mb-12"
         text={PlayerName}
         size="small"
       />
@@ -183,7 +183,7 @@ export function Player() {
         </>
       ) : (
         <div className="flex flex-col justify-center items-center w-full">
-          <Icon className="mb-20" />
+          <Icon className="mb-8" />
           <Paragraph
             className="w-4/5"
             text="Add your own prompts while waiting for the game to start"
