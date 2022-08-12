@@ -118,23 +118,21 @@ export function Host() {
                 if (imageWinning === -1) {
                   return (
                     <img
-                      className="m-4 border max-h-80"
+                      className="m-4 border max-h-96 max-w-[45%]"
                       key={index}
                       src={image}
-                      width="40%"
                     />
                   );
                 } else {
                   return (
                     <img
-                      className={`m-4 border max-h-80 ${
+                      className={`m-4 border max-h-96 max-w-[45%] ${
                         imageWinning === index
                           ? "border-green-500 border-4"
                           : "opacity-25"
                       }`}
                       key={index}
                       src={image}
-                      width="40%"
                     />
                   );
                 }

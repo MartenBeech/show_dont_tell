@@ -43,11 +43,11 @@ export function App() {
             : ""
         }
       >
-        <div className="border-l border-r bg-custom-gray">
+        <div className="border-l border-r bg-custom-gray-light">
           {!token ? (
             <Login setToken={setToken} />
           ) : (
-            <div className="h-screen bg-custom-gray">
+            <div className="min-h-screen bg-custom-gray-light">
               <Routing />
             </div>
           )}

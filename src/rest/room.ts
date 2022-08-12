@@ -161,8 +161,10 @@ export async function CreateRoom() {
         "What tattoo could you imagine the judge getting?",
         "Where do you see the judge in 10 years?",
         "What could be the judge's favorite hobby?",
-        "Describe the judge's home country with one image",
-        "How would the judge dress up before a date?",
+        "What image best describes the judge's home country?",
+        "How would the judge dress up for a first date?",
+        "What should be the judge's new background wallpaper?",
+        "The judge could easily wear a t-shirt in public with this image printed on it.",
       ],
       roomName: RoomName,
     });

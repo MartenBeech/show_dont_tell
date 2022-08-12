@@ -11,7 +11,7 @@ import {
 } from "../../rest/room";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { Input } from "../input";
+import { FileInput, Input } from "../input";
 import { Paragraph } from "../paragraph";
 import { RoomName } from "./login";
 import { PlayerName, PlayerId } from "./menu";
@@ -107,10 +107,9 @@ export function Player() {
                     if (image && !state.winnerChosen) {
                       return (
                         <img
-                          className="m-4 border cursor-pointer max-h-80"
+                          className="m-4 border cursor-pointer max-h-80 max-w-[40%]"
                           key={index}
                           src={image}
-                          width="40%"
                           onClick={() => {
                             SetImageWinning({ imageWinning: index });
                             const timer = setTimeout(
@@ -140,7 +139,7 @@ export function Player() {
               )}
             </>
           ) : (
-            <div className="flex flex-col items-center w-full mt-20">
+            <div className="flex flex-col items-center w-full mt-12">
               {state.imageSubmitted ? (
                 <Paragraph
                   className="flex justify-center w-4/5"
@@ -149,9 +148,12 @@ export function Player() {
                 />
               ) : (
                 <>
-                  <Paragraph className="w-4/5" text="Paste image URL here" />
+                  <Paragraph
+                    className="w-4/5"
+                    text="Paste image URL or upload from device"
+                  />
                   <Input
-                    className="mt-2"
+                    className="mt-2 h-10"
                     onChange={(event) => {
                       setState({ ...state, imageUrl: event.target.value });
                     }}
@@ -159,9 +161,16 @@ export function Player() {
                     size="xs"
                     value={state.imageUrl}
                   />
-                  <div className="flex justify-center mt-4 w-full">
+                  <FileInput
+                    classname="w-4/5 mt-4"
+                    onChange={(event) => {
+                      const url = URL.createObjectURL(event.target.files[0]);
+                      setState({ ...state, imageUrl: url });
+                    }}
+                  />
+                  <div className="flex justify-center mt-8 w-full">
                     <Button
-                      text="Use image"
+                      text="Submit image"
                       size="small"
                       disabled={!state.imageUrl.length}
                       width="1/2"
@@ -175,8 +184,8 @@ export function Player() {
                   </div>
                 </>
               )}
-              {!!state.imageUrl.length && (
-                <img className="mt-20" width={"80%"} src={state.imageUrl} />
+              {state.imageUrl && (
+                <img className="mt-12 mb-8 max-w-[80%]" src={state.imageUrl} />
               )}
             </div>
           )}
@@ -186,14 +195,18 @@ export function Player() {
           <Icon className="mb-8" />
           <Paragraph
             className="w-4/5"
-            text="Add your own prompts while waiting for the game to start"
+            text="Add your own prompts while waiting for the game to start."
+          />
+          <Paragraph
+            className="w-4/5"
+            text="The player who is voting is known as 'the judge'"
           />
           <Input
             className="mt-2"
             onChange={(event) => {
               setState({ ...state, prompt: event.target.value });
             }}
-            placeholder="E.g. 'Where do you see this player in 10 years?'"
+            placeholder="E.g. 'Where do you see the judge in 10 years?'"
             size="xs"
             value={state.prompt}
           />

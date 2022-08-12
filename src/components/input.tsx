@@ -30,3 +30,27 @@ export function Input(props: inputProps) {
     />
   );
 }
+
+interface fileInputProps {
+  classname?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+}
+
+export function FileInput(props: fileInputProps) {
+  return (
+    <div className={props.classname}>
+      <label className={`w-1/2 flex cursor-pointer h-10`}>
+        <div className="flex justify-center items-center w-full border border-black rounded px-2 py-1 bg-custom-gray-dark hover:bg-details-light font-italic">
+          Upload image
+        </div>
+        <input
+          className="w-0"
+          type={"file"}
+          style={{ visibility: "hidden" }}
+          accept={"image/*"}
+          onChange={props.onChange}
+        />
+      </label>
+    </div>
+  );
+}
