@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { Button } from "../button";
@@ -6,9 +6,9 @@ import { Paragraph } from "../paragraph";
 import { db } from "../../rest/auth";
 import { RoomName } from "./login";
 import { Room, StartGame } from "../../rest/room";
+import { GetImages } from "../../rest/storage";
 
 let gameStarted = false;
-let images: Array<string>;
 let gameVoting = false;
 let imagesSubmitted = 0;
 let prompts: Array<string>;
@@ -19,7 +19,6 @@ let players: Array<string>;
 
 interface state {
   gameStarted: boolean;
-  images: Array<string>;
   gameVoting: boolean;
   imagesSubmitted: number;
   prompts: Array<string>;
@@ -38,7 +37,6 @@ export const playerTurnChanged = () => {
 export function Host() {
   const [state, setState] = useState<state>({
     gameStarted: false,
-    images: [],
     gameVoting: false,
     imagesSubmitted: 0,
     prompts: [],
@@ -47,6 +45,18 @@ export function Host() {
     playerTurn: -1,
     players: [],
   });
+
+  const [imagesState, setImagesState] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    if (state.gameVoting) {
+      const getImages = async () => {
+        const imageUrls = await GetImages({ roomName: RoomName });
+        setImagesState(imageUrls);
+      };
+      getImages();
+    }
+  }, [state.gameVoting]);
 
   const messagesRef = doc(db, "rooms", RoomName);
   onSnapshot(messagesRef, (docSnap) => {
@@ -63,14 +73,7 @@ export function Host() {
         gameStarted = true;
       }
       if (state.gameStarted) {
-        let imagesCount = 0;
-        room.images.map((image) => {
-          if (image) {
-            imagesCount++;
-          }
-        });
-        images = [...room.images];
-        imagesSubmitted = imagesCount;
+        imagesSubmitted = room.imagesSubmitted;
         gameVoting = room.gameVoting;
         imageWinning = room.imageWinning;
         if (playerTurn != room.playerTurn) {
@@ -80,7 +83,6 @@ export function Host() {
       }
       if (
         state.gameStarted != gameStarted ||
-        JSON.stringify(state.images) != JSON.stringify(images) ||
         state.imagesSubmitted != imagesSubmitted ||
         state.gameVoting != gameVoting ||
         JSON.stringify(state.prompts) != JSON.stringify(prompts) ||
@@ -92,7 +94,6 @@ export function Host() {
         setState({
           ...state,
           gameStarted: gameStarted,
-          images: images,
           imagesSubmitted: imagesSubmitted,
           gameVoting: gameVoting,
           prompts: prompts,
@@ -113,7 +114,7 @@ export function Host() {
             <Paragraph text={state.prompt} size="large" />
           </div>
           <div className="flex justify-center items-center flex-wrap">
-            {state.images.map((image, index) => {
+            {imagesState.map((image, index) => {
               if (image) {
                 if (imageWinning === -1) {
                   return (
@@ -142,10 +143,17 @@ export function Host() {
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center w-full h-screen">
-          <Paragraph className="mb-40" text={state.prompt} size="xl" />
+          <Paragraph
+            className="mb-40 p-4"
+            text={state.prompt.replace(
+              "Judge",
+              state.players[state.playerTurn]
+            )}
+            size="xl"
+          />
           <Paragraph
             className="mb-8"
-            text={`${state.players[state.playerTurn]} is the judge`}
+            text={`The Judge is ${state.players[state.playerTurn]}`}
             size="xl"
           />
           <Paragraph

@@ -4,7 +4,6 @@ import { Input } from "../input";
 import { Paragraph } from "../paragraph";
 import { Link } from "react-router-dom";
 import { LoginPlayer } from "../../rest/room";
-import { Icon } from "../icon";
 
 export let PlayerName: string;
 export let PlayerId: number;

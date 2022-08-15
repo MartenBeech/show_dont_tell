@@ -1,14 +1,15 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "../../rest/auth";
 import {
   SubmitPrompt,
   Room,
-  SubmitImage,
   StartVoting,
   SetImageWinning,
   NewPlayerTurn,
+  SubmitImage,
 } from "../../rest/room";
+import { GetImages } from "../../rest/storage";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { FileInput, Input } from "../input";
@@ -16,36 +17,40 @@ import { Paragraph } from "../paragraph";
 import { RoomName } from "./login";
 import { PlayerName, PlayerId } from "./menu";
 
+let gameStarted = false;
+let playerTurn = -1;
+let gameVoting = false;
+let winnerChosen = false;
+
 interface state {
   gameStarted: boolean;
   prompt: string;
-  imageUrl: string;
-  imageSubmitted: boolean;
   playerTurn: number;
   gameVoting: boolean;
-  images: Array<string>;
   winnerChosen: boolean;
 }
 
 export function Player() {
   const [state, setState] = useState<state>({
     prompt: "",
-    imageUrl: "",
     gameStarted: false,
-    imageSubmitted: false,
     playerTurn: -1,
     gameVoting: false,
-    images: [],
     winnerChosen: false,
   });
+  const [imagesState, setImagesState] = useState<Array<string>>([]);
+  const [imageSubmittedState, setImageSubmittedState] = useState(false);
+  const [imageUrlState, setImageUrlState] = useState("");
 
-  let gameStarted = state.gameStarted;
-  let playerTurn = state.playerTurn;
-  let gameVoting = state.gameVoting;
-  let images = [...state.images];
-  let imageSubmitted = state.imageSubmitted;
-  let winnerChosen = state.winnerChosen;
-  let imageUrl = state.imageUrl;
+  useEffect(() => {
+    if (state.gameVoting) {
+      const getImages = async () => {
+        const imageUrls = await GetImages({ roomName: RoomName });
+        setImagesState(imageUrls);
+      };
+      getImages();
+    }
+  }, [state.gameVoting]);
 
   const messagesRef = doc(db, "rooms", RoomName);
   onSnapshot(messagesRef, (docSnap) => {
@@ -58,34 +63,25 @@ export function Player() {
       }
       if (state.gameStarted) {
         gameVoting = room.gameVoting;
-        images = [...room.images];
         winnerChosen = room.imageWinning >= 0;
-        if (images[PlayerId]) {
-          imageSubmitted = true;
-        }
         if (playerTurn != room.playerTurn) {
-          imageSubmitted = false;
-          (imageUrl = ""), (playerTurn = room.playerTurn);
+          setImageSubmittedState(false);
+          setImageUrlState("");
+          playerTurn = room.playerTurn;
         }
       }
       if (
         state.gameStarted != gameStarted ||
         state.playerTurn != playerTurn ||
         state.gameVoting != gameVoting ||
-        JSON.stringify(state.images) != JSON.stringify(images) ||
-        state.imageSubmitted != imageSubmitted ||
-        state.winnerChosen != winnerChosen ||
-        state.imageUrl != imageUrl
+        state.winnerChosen != winnerChosen
       )
         setState({
           ...state,
           gameStarted: gameStarted,
           playerTurn: playerTurn,
           gameVoting: gameVoting,
-          images: images,
-          imageSubmitted: imageSubmitted,
           winnerChosen: winnerChosen,
-          imageUrl: imageUrl,
         });
     }
   });
@@ -103,7 +99,7 @@ export function Player() {
             <>
               {state.gameVoting ? (
                 <div className="flex justify-center items-center flex-wrap">
-                  {state.images.map((image, index) => {
+                  {imagesState.map((image, index) => {
                     if (image && !state.winnerChosen) {
                       return (
                         <img
@@ -140,7 +136,7 @@ export function Player() {
             </>
           ) : (
             <div className="flex flex-col items-center w-full mt-12">
-              {state.imageSubmitted ? (
+              {imageSubmittedState ? (
                 <Paragraph
                   className="flex justify-center w-4/5"
                   text="Waiting for other players"
@@ -155,37 +151,44 @@ export function Player() {
                   <Input
                     className="mt-2 h-10"
                     onChange={(event) => {
-                      setState({ ...state, imageUrl: event.target.value });
+                      setImageUrlState(event.target.value);
                     }}
                     placeholder="www.google.com/image-url"
                     size="xs"
-                    value={state.imageUrl}
+                    value={imageUrlState}
                   />
                   <FileInput
                     classname="w-4/5 mt-4"
                     onChange={(event) => {
                       const url = URL.createObjectURL(event.target.files[0]);
-                      setState({ ...state, imageUrl: url });
+                      setImageUrlState(url);
                     }}
                   />
                   <div className="flex justify-center mt-8 w-full">
                     <Button
                       text="Submit image"
                       size="small"
-                      disabled={!state.imageUrl.length}
+                      disabled={!imageUrlState.length}
                       width="1/2"
-                      onClick={() => {
-                        SubmitImage({
-                          player: PlayerName,
-                          image: state.imageUrl,
-                        });
+                      onClick={async () => {
+                        const response = await fetch(imageUrlState);
+                        const blob = await response.blob();
+                        const image = new File(
+                          [blob],
+                          `${Math.floor(Math.random() * 65536)}${PlayerId}`,
+                          {
+                            type: blob.type,
+                          }
+                        );
+                        SubmitImage({ image: image });
+                        setImageSubmittedState(true);
                       }}
                     />
                   </div>
                 </>
               )}
-              {state.imageUrl && (
-                <img className="mt-12 mb-8 max-w-[80%]" src={state.imageUrl} />
+              {imageUrlState && (
+                <img className="mt-12 mb-8 max-w-[80%]" src={imageUrlState} />
               )}
             </div>
           )}
@@ -199,14 +202,14 @@ export function Player() {
           />
           <Paragraph
             className="w-4/5"
-            text="The player who is voting is known as 'the judge'"
+            text="Typing 'Judge' will turn into the name of the player currently voting."
           />
           <Input
             className="mt-2"
             onChange={(event) => {
               setState({ ...state, prompt: event.target.value });
             }}
-            placeholder="E.g. 'Where do you see the judge in 10 years?'"
+            placeholder="E.g. 'Where do you see Judge in 10 years?'"
             size="xs"
             value={state.prompt}
           />
