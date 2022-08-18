@@ -41,6 +41,7 @@ export function Player() {
   const [imagesState, setImagesState] = useState<Array<string>>([]);
   const [imageSubmittedState, setImageSubmittedState] = useState(false);
   const [imageUrlState, setImageUrlState] = useState("");
+  const [errorMsgState, setErrorMsgState] = useState("");
 
   useEffect(() => {
     if (state.gameVoting) {
@@ -152,6 +153,7 @@ export function Player() {
                     className="mt-2 h-10"
                     onChange={(event) => {
                       setImageUrlState(event.target.value);
+                      setErrorMsgState("");
                     }}
                     placeholder="www.google.com/image-url"
                     size="xs"
@@ -162,6 +164,7 @@ export function Player() {
                     onChange={(event) => {
                       const url = URL.createObjectURL(event.target.files[0]);
                       setImageUrlState(url);
+                      setErrorMsgState("");
                     }}
                   />
                   <div className="flex justify-center mt-8 w-full">
@@ -171,20 +174,28 @@ export function Player() {
                       disabled={!imageUrlState.length}
                       width="1/2"
                       onClick={async () => {
-                        const response = await fetch(imageUrlState);
-                        const blob = await response.blob();
-                        const image = new File(
-                          [blob],
-                          `${Math.floor(Math.random() * 65536)}${PlayerId}`,
-                          {
-                            type: blob.type,
-                          }
-                        );
-                        SubmitImage({ image: image });
-                        setImageSubmittedState(true);
+                        try {
+                          const response = await fetch(imageUrlState);
+                          const blob = await response.blob();
+                          const image = new File(
+                            [blob],
+                            `${Math.floor(Math.random() * 65536)}${PlayerId}`,
+                            {
+                              type: blob.type,
+                            }
+                          );
+                          SubmitImage({ image: image });
+                          setImageSubmittedState(true);
+                        } catch (error) {
+                          setErrorMsgState("(Invalid image format)");
+                        }
                       }}
                     />
                   </div>
+                  <Paragraph
+                    className="text-custom-red-light"
+                    text={errorMsgState}
+                  />
                 </>
               )}
               {imageUrlState && (

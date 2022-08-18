@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
-import { Link } from "react-router-dom";
 import { Button } from "../button";
 import { Paragraph } from "../paragraph";
 import { db } from "../../rest/auth";
