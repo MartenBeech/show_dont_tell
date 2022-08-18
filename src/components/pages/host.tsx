@@ -170,21 +170,28 @@ export function Host() {
         text={`Players in lobby: ${state.players.length}`}
         size="large"
       />
-      <Link className="flex w-4/5 justify-center" to={"/host"}>
-        <Button
-          text="Start game"
-          size="large"
-          onClick={() => {
-            prompts = [...state.prompts];
-            StartGame();
-          }}
-        />
-      </Link>
+      <Button
+        className="w-4/5"
+        text="Start game"
+        size="large"
+        onClick={() => {
+          prompts = [...state.prompts];
+          StartGame();
+        }}
+        disabled={state.players.length < 3}
+      />
       {state.players.map((player, index) => {
         return (
           <Paragraph className="mt-4" text={player} key={index} size="large" />
         );
       })}
+      {state.players.length < 3 && (
+        <Paragraph
+          className="mt-4"
+          text={"(You need at least 3 players to start)"}
+          size="small"
+        />
+      )}
     </div>
   );
 }

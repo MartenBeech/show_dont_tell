@@ -23,7 +23,7 @@ export function Button(props: buttonProps) {
           ? "h-16"
           : "h-28"
       } ${props.disabled && "disabled opacity-50 cursor-default"}`}
-      onClick={props.onClick}
+      onClick={props.disabled ? null : props.onClick}
     >
       <h1
         className={`${
