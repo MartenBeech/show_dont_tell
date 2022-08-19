@@ -3,7 +3,7 @@ import React from "react";
 interface paragraphProps {
   className?: string;
   text: string;
-  size?: "xl" | "large" | "small";
+  size?: "xl" | "large" | "small" | "xs";
 }
 
 export function Paragraph(props: paragraphProps) {
@@ -16,6 +16,8 @@ export function Paragraph(props: paragraphProps) {
           ? "text-2xl"
           : props.size === "small"
           ? "text-lg"
+          : props.size === "xs"
+          ? ""
           : "text-xl"
       }`}
     >

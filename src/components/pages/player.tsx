@@ -42,6 +42,7 @@ export function Player() {
   const [imageSubmittedState, setImageSubmittedState] = useState(false);
   const [imageUrlState, setImageUrlState] = useState("");
   const [errorMsgState, setErrorMsgState] = useState("");
+  const [successMsgState, setSuccessMsgState] = useState("");
 
   useEffect(() => {
     if (state.gameVoting) {
@@ -90,7 +91,7 @@ export function Player() {
   return (
     <div className="h-full">
       <Paragraph
-        className="flex justify-center pt-2 mb-12"
+        className="flex justify-center pt-2 mb-8"
         text={PlayerName}
         size="small"
       />
@@ -147,7 +148,7 @@ export function Player() {
                 <>
                   <Paragraph
                     className="w-4/5"
-                    text="Paste image URL or upload from device"
+                    text="Paste image URL or upload from device:"
                   />
                   <Input
                     className="mt-2 h-10"
@@ -208,7 +209,7 @@ export function Player() {
         <div className="flex flex-col justify-center items-center w-full">
           <Icon className="mb-8" />
           <Paragraph
-            className="w-4/5"
+            className="w-4/5 mb-2"
             text="Add your own prompts while waiting for the game to start."
           />
           <Paragraph
@@ -219,6 +220,7 @@ export function Player() {
             className="mt-2"
             onChange={(event) => {
               setState({ ...state, prompt: event.target.value });
+              setSuccessMsgState("");
             }}
             placeholder="E.g. 'Where do you see Judge in 10 years?'"
             size="xs"
@@ -226,7 +228,7 @@ export function Player() {
           />
           <div className="flex justify-center mt-4 w-full">
             <Button
-              className="mb-16"
+              className="mb-4"
               text="Submit prompt"
               size="small"
               disabled={!state.prompt.length}
@@ -234,9 +236,40 @@ export function Player() {
               onClick={() => {
                 SubmitPrompt({ prompt: state.prompt });
                 setState({ ...state, prompt: "" });
+                const rnd = Math.floor(Math.random() * 10);
+                setSuccessMsgState(
+                  `Successfully submitted prompt.${
+                    rnd === 0
+                      ? " Good one!"
+                      : rnd === 1
+                      ? " Very funny!"
+                      : rnd === 2
+                      ? " Best one so far!"
+                      : rnd === 3
+                      ? " Literally a good prompt!"
+                      : rnd === 4
+                      ? " Super duper!"
+                      : rnd === 5
+                      ? " Woohoooo!"
+                      : rnd === 6
+                      ? " You did amazing!"
+                      : rnd === 7
+                      ? " We are all very proud of you!"
+                      : rnd === 8
+                      ? " Now give me another one!"
+                      : rnd === 9
+                      ? " I could never come up with that!"
+                      : ""
+                  }`
+                );
               }}
             />
           </div>
+          <Paragraph
+            className="flex justify-center w-4/5 text-custom-green"
+            text={successMsgState}
+            size="xs"
+          />
         </div>
       )}
     </div>

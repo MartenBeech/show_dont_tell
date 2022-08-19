@@ -8,6 +8,7 @@ module.exports = {
         "custom-gray-light": "#F4F4F4",
         "custom-gray-dark": "#DDDDDD",
         "custom-red-light": "#FF5659",
+        "custom-green": "#24BD51",
       },
       fontFamily: {
         cambria: ["Cambria"],
