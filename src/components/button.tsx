@@ -14,7 +14,7 @@ export function Button(props: buttonProps) {
     <button
       className={`${
         props.className
-      } border rounded-lg bg-custom-blue text-white font-cambria w-${
+      } border rounded-lg bg-custom-blue-dark text-white font-cambria w-${
         props.width || "full"
       } ${
         props.size === "large"
@@ -22,7 +22,11 @@ export function Button(props: buttonProps) {
           : props.size === "small"
           ? "h-16"
           : "h-28"
-      } ${props.disabled && "disabled opacity-50 cursor-default"}`}
+      } ${
+        props.disabled
+          ? "disabled opacity-50 cursor-default"
+          : "transition ease-in-out delay-150 hover:scale-110 hover:bg-custom-blue-light duration-300"
+      }`}
       onClick={props.disabled ? null : props.onClick}
     >
       <h1

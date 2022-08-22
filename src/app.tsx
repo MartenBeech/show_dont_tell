@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Login } from "./components/pages/login";
 import { Routing } from "./components/routing";
+import backgroundImg from "./images/backgroundImg.jpg";
 
 export enum ScreenSize {
   small,
@@ -31,9 +32,9 @@ export function App() {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className={`flex justify-center bg-custom-white`}>
       <div
-        className={
+        className={`bg-gradient-to-b from-custom-gray-light to-custom-gray-dark ${
           screenSize === ScreenSize.small
             ? "w-full"
             : screenSize === ScreenSize.medium
@@ -41,13 +42,13 @@ export function App() {
             : screenSize === ScreenSize.large
             ? "w-1/2"
             : ""
-        }
+        }`}
       >
-        <div className="border-l border-r bg-custom-gray-light">
+        <div className="">
           {!token ? (
             <Login setToken={setToken} />
           ) : (
-            <div className="min-h-screen bg-custom-gray-light">
+            <div className="min-h-screen">
               <Routing />
             </div>
           )}

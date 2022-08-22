@@ -17,8 +17,8 @@ export function Login(props: loginProps) {
   const [roomName, setRoomName] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const authenticated = await Auth({
       username: process.env.REACT_APP_AUTH_EMAIL,
       password,
@@ -49,18 +49,19 @@ export function Login(props: loginProps) {
         <form
           className="flex flex-col items-center w-full"
           onSubmit={(event) => {
-            handleSubmit(event);
+            event.preventDefault();
+            if (roomName && password) {
+              handleSubmit(event);
+            }
           }}
         >
           <Paragraph className="mt-8" text="Password" size="large" />
-
           <Input
             className="mt-2"
             password
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-
           <Button
             className="mt-8"
             text="Log in"

@@ -14,7 +14,7 @@ export function Input(props: inputProps) {
     <input
       className={`${
         props.className
-      } border rounded border-custom-blue w-4/5 p-2 ${
+      } border rounded border-custom-blue-dark w-4/5 p-2 bg-custom-white ${
         props.size === "large"
           ? "text-xl"
           : props.size === "small"
