@@ -27,20 +27,22 @@ export function Menu() {
         size="large"
       />
       <div className="mt-12" />
-      <Link
-        className="flex w-1/2 justify-center"
-        to={state.name.length ? "/player" : "/"}
-      >
-        <Button
-          text="Join as player"
-          size="large"
-          disabled={!state.name.length}
-          onClick={async () => {
-            PlayerName = state.name;
-            PlayerId = await LoginPlayer({ playerName: state.name });
-          }}
-        />
-      </Link>
+      {state.name.length ? (
+        <Link className="flex w-1/2 justify-center" to={"/player"}>
+          <Button
+            text="Join as player"
+            size="large"
+            onClick={async () => {
+              PlayerName = state.name;
+              PlayerId = await LoginPlayer({ playerName: state.name });
+            }}
+          />
+        </Link>
+      ) : (
+        <div className="flex w-1/2 justify-center">
+          <Button text="Join as player" size="large" disabled />
+        </div>
+      )}
       <div className="mt-8" />
       <Link className="flex w-1/2 justify-center" to={"/host"}>
         <Button text="Host screen" />
