@@ -1,4 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { db } from "../../rest/auth";
 import {
@@ -39,10 +40,15 @@ export function Player() {
     winnerChosen: false,
   });
   const [imagesState, setImagesState] = useState<Array<string>>([]);
+  const [revealedImagesState, setRevealedImagesState] = useState<Array<string>>(
+    []
+  );
+  const [timerInterval, setTimerInterval] = useState(0);
   const [imageSubmittedState, setImageSubmittedState] = useState(false);
   const [imageUrlState, setImageUrlState] = useState("");
   const [errorMsgState, setErrorMsgState] = useState("");
   const [successMsgState, setSuccessMsgState] = useState("");
+  const [votingEnabled, setVotingEnabled] = useState(false);
 
   useEffect(() => {
     if (state.gameVoting) {
@@ -51,8 +57,41 @@ export function Player() {
         setImagesState(imageUrls);
       };
       getImages();
+    } else {
+      setRevealedImagesState([]);
+      setVotingEnabled(false);
     }
   }, [state.gameVoting]);
+
+  useEffect(() => {
+    if (imagesState.length && !revealedImagesState.length) {
+      timerCallback();
+    }
+  }, [imagesState]);
+
+  useEffect(() => {
+    if (imagesState.length && state.gameVoting) {
+      const images = [...imagesState];
+      const revealedImages = [...revealedImagesState];
+      const image = images[0];
+      revealedImages.push(image);
+      images.splice(0, 1);
+
+      setImagesState(images);
+      setRevealedImagesState(revealedImages);
+
+      if (images.length) {
+        const timer: NodeJS.Timer = setTimeout(() => timerCallback(), 2000);
+        return () => clearTimeout(timer);
+      } else {
+        setVotingEnabled(true);
+      }
+    }
+  }, [timerInterval]);
+
+  const timerCallback = () => {
+    setTimerInterval((timerInterval) => timerInterval + 1);
+  };
 
   const messagesRef = doc(db, "rooms", RoomName);
   onSnapshot(messagesRef, (docSnap) => {
@@ -89,7 +128,12 @@ export function Player() {
   });
 
   return (
-    <div className="h-full">
+    <motion.div
+      className="h-full"
+      key={"player"}
+      initial={{ opacity: 0, x: -200 }}
+      animate={{ opacity: 1, x: 0 }}
+    >
       <Paragraph
         className="flex justify-center pt-2 mb-8"
         text={PlayerName}
@@ -101,7 +145,7 @@ export function Player() {
             <>
               {state.gameVoting ? (
                 <div className="flex justify-center items-center flex-wrap">
-                  {imagesState.map((image, index) => {
+                  {revealedImagesState.map((image, index) => {
                     if (image && !state.winnerChosen) {
                       return (
                         <img
@@ -109,13 +153,15 @@ export function Player() {
                           key={index}
                           src={image}
                           onClick={() => {
-                            SetImageWinning({ imageWinning: index });
-                            const timer = setTimeout(
-                              () => NewPlayerTurn(),
-                              5000
-                            );
-                            setState({ ...state, winnerChosen: true });
-                            return () => clearTimeout(timer);
+                            if (votingEnabled) {
+                              SetImageWinning({ imageWinning: index });
+                              const timer = setTimeout(
+                                () => NewPlayerTurn(),
+                                5000
+                              );
+                              setState({ ...state, winnerChosen: true });
+                              return () => clearTimeout(timer);
+                            }
                           }}
                         />
                       );
@@ -211,10 +257,12 @@ export function Player() {
           <Paragraph
             className="w-4/5 mb-2"
             text="Add your own prompts while waiting for the game to start."
+            size="small"
           />
           <Paragraph
             className="w-4/5"
             text="Typing 'Judge' will turn into the name of the player currently voting."
+            size="small"
           />
           <Input
             className="mt-2"
@@ -272,6 +320,6 @@ export function Player() {
           />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

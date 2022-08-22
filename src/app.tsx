@@ -1,7 +1,7 @@
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { Login } from "./components/pages/login";
 import { Routing } from "./components/routing";
-import backgroundImg from "./images/backgroundImg.jpg";
 
 export enum ScreenSize {
   small,
@@ -44,7 +44,7 @@ export function App() {
             : ""
         }`}
       >
-        <div className="">
+        <AnimatePresence mode="wait">
           {!token ? (
             <Login setToken={setToken} />
           ) : (
@@ -52,7 +52,7 @@ export function App() {
               <Routing />
             </div>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );

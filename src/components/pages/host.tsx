@@ -6,6 +6,7 @@ import { db } from "../../rest/auth";
 import { RoomName } from "./login";
 import { Room, StartGame } from "../../rest/room";
 import { GetImages } from "../../rest/storage";
+import { motion } from "framer-motion";
 
 let gameStarted = false;
 let gameVoting = false;
@@ -46,6 +47,10 @@ export function Host() {
   });
 
   const [imagesState, setImagesState] = useState<Array<string>>([]);
+  const [revealedImagesState, setRevealedImagesState] = useState<Array<string>>(
+    []
+  );
+  const [timerInterval, setTimerInterval] = useState(0);
 
   useEffect(() => {
     if (state.gameVoting) {
@@ -54,8 +59,38 @@ export function Host() {
         setImagesState(imageUrls);
       };
       getImages();
+    } else {
+      setRevealedImagesState([]);
     }
   }, [state.gameVoting]);
+
+  useEffect(() => {
+    if (imagesState.length && !revealedImagesState.length) {
+      timerCallback();
+    }
+  }, [imagesState]);
+
+  useEffect(() => {
+    if (imagesState.length && state.gameVoting) {
+      const images = [...imagesState];
+      const revealedImages = [...revealedImagesState];
+      const image = images[0];
+      revealedImages.push(image);
+      images.splice(0, 1);
+
+      setImagesState(images);
+      setRevealedImagesState(revealedImages);
+
+      if (images.length) {
+        const timer: NodeJS.Timer = setTimeout(() => timerCallback(), 2000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [timerInterval]);
+
+  const timerCallback = () => {
+    setTimerInterval((timerInterval) => timerInterval + 1);
+  };
 
   const messagesRef = doc(db, "rooms", RoomName);
   onSnapshot(messagesRef, (docSnap) => {
@@ -106,14 +141,24 @@ export function Host() {
   });
 
   return state.gameStarted ? (
-    <>
+    <motion.div
+      key={"host0"}
+      initial={{ opacity: 0, x: -200 }}
+      animate={{ opacity: 1, x: 0 }}
+    >
       {state.gameVoting ? (
         <div className="flex flex-col">
           <div className="flex justify-center">
-            <Paragraph text={state.prompt} size="large" />
+            <Paragraph
+              text={state.prompt.replace(
+                "Judge",
+                state.players[state.playerTurn]
+              )}
+              size="large"
+            />
           </div>
           <div className="flex justify-center items-center flex-wrap">
-            {imagesState.map((image, index) => {
+            {revealedImagesState.map((image, index) => {
               if (image) {
                 if (imageWinning === -1) {
                   return (
@@ -161,9 +206,14 @@ export function Host() {
           />
         </div>
       )}
-    </>
+    </motion.div>
   ) : (
-    <div className="flex flex-col justify-center items-center w-full h-screen">
+    <motion.div
+      className="flex flex-col justify-center items-center w-full h-screen"
+      key={"host1"}
+      initial={{ opacity: 0, x: -200 }}
+      animate={{ opacity: 1, x: 0 }}
+    >
       <Paragraph
         className="mb-2"
         text={`Players in lobby: ${state.players.length}`}
@@ -191,6 +241,6 @@ export function Host() {
           size="small"
         />
       )}
-    </div>
+    </motion.div>
   );
 }

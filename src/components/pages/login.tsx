@@ -6,6 +6,7 @@ import { Input } from "../input";
 import { Button } from "../button";
 import { CreateRoom } from "../../rest/room";
 import { Icon } from "../icon";
+import { motion } from "framer-motion";
 
 export let RoomName = "";
 
@@ -36,7 +37,12 @@ export function Login(props: loginProps) {
   };
 
   return (
-    <div className="flex w-full h-screen justify-center items-center">
+    <motion.div
+      className="flex w-full h-screen justify-center items-center"
+      key={"login"}
+      initial={{ opacity: 0, x: -200 }}
+      animate={{ opacity: 1, x: 0 }}
+    >
       <div className="flex flex-col w-full items-center">
         <Paragraph className="mb-4" text="SHOW DON'T TELL" size="xl" />
         <Icon className="mb-8" />
@@ -71,6 +77,6 @@ export function Login(props: loginProps) {
           />
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 }

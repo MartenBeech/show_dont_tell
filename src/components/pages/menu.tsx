@@ -4,6 +4,7 @@ import { Input } from "../input";
 import { Paragraph } from "../paragraph";
 import { Link } from "react-router-dom";
 import { LoginPlayer } from "../../rest/room";
+import { motion } from "framer-motion";
 
 export let PlayerName: string;
 export let PlayerId: number;
@@ -17,7 +18,12 @@ export function Menu() {
     name: "",
   });
   return (
-    <div className="flex flex-col justify-center items-center w-full h-screen">
+    <motion.div
+      className="flex flex-col justify-center items-center w-full h-screen"
+      key={"menu"}
+      initial={{ opacity: 0, x: -200 }}
+      animate={{ opacity: 1, x: 0 }}
+    >
       <Paragraph text="Enter player name" size="large" />
       <Input
         className="mt-2"
@@ -47,6 +53,6 @@ export function Menu() {
       <Link className="flex w-1/2 justify-center" to={"/host"}>
         <Button text="Host screen" />
       </Link>
-    </div>
+    </motion.div>
   );
 }
