@@ -1,5 +1,6 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { Login } from "./components/pages/login";
 import { Routing } from "./components/routing";
 
@@ -44,14 +45,16 @@ export function App() {
             : ""
         }`}
       >
-        <AnimatePresence mode="wait">
-          {!token ? (
-            <Login setToken={setToken} />
-          ) : (
-            <div className="min-h-screen">
-              <Routing />
-            </div>
-          )}
+        <AnimatePresence>
+          <BrowserRouter>
+            {!token ? (
+              <Login setToken={setToken} />
+            ) : (
+              <div className="min-h-screen">
+                <Routing />
+              </div>
+            )}
+          </BrowserRouter>
         </AnimatePresence>
       </div>
     </div>

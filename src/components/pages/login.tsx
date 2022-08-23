@@ -7,6 +7,7 @@ import { Button } from "../button";
 import { CreateRoom } from "../../rest/room";
 import { Icon } from "../icon";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export let RoomName = "";
 
@@ -18,8 +19,7 @@ export function Login(props: loginProps) {
   const [roomName, setRoomName] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     const authenticated = await Auth({
       username: process.env.REACT_APP_AUTH_EMAIL,
       password,
@@ -49,16 +49,13 @@ export function Login(props: loginProps) {
         <Paragraph text="Room name" size="large" />
         <Input
           className="mt-2"
-          onChange={(e) => setRoomName(e.target.value)}
+          onChange={(e) => setRoomName(e.target.value.toLocaleUpperCase())}
           value={roomName}
         />
         <form
           className="flex flex-col items-center w-full"
           onSubmit={(event) => {
             event.preventDefault();
-            if (roomName && password) {
-              handleSubmit(event);
-            }
           }}
         >
           <Paragraph className="mt-8" text="Password" size="large" />
@@ -68,13 +65,27 @@ export function Login(props: loginProps) {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-          <Button
-            className="mt-8"
-            text="Log in"
-            size="small"
-            width="1/2"
-            disabled={!roomName || !password}
-          />
+          {!roomName || !password ? (
+            <Button
+              className="mt-8"
+              text="Log in"
+              size="small"
+              width="1/2"
+              disabled
+            />
+          ) : (
+            <Link className="flex justify-center w-full mt-8" to={"/"}>
+              <Button
+                text="Log in"
+                size="small"
+                width="1/2"
+                disabled={!roomName || !password}
+                onClick={() => {
+                  handleSubmit();
+                }}
+              />
+            </Link>
+          )}
         </form>
       </div>
     </motion.div>

@@ -1,12 +1,12 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Host } from "./pages/host";
 import { Menu } from "./pages/menu";
 import { Player } from "./pages/player";
 
 export function Routing() {
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         <Route path="/" element={<Menu />} />
       </Routes>
@@ -16,6 +16,6 @@ export function Routing() {
       <Routes>
         <Route path="/host" element={<Host />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }

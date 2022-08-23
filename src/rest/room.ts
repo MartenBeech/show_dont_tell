@@ -133,6 +133,17 @@ export async function SubmitImage(props: submitImageProps) {
   });
 }
 
+export async function DeleteAllPlayers() {
+  const colRef = collection(db, "rooms");
+  const players: Array<string> = [];
+
+  await updateDoc(doc(colRef, RoomName), {
+    players: players,
+  });
+
+  return players.length - 1;
+}
+
 export async function CreateRoom() {
   const colRef = collection(db, "rooms");
   const room = await GetRoom();

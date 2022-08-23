@@ -5,6 +5,7 @@ import { Paragraph } from "../paragraph";
 import { Link } from "react-router-dom";
 import { LoginPlayer } from "../../rest/room";
 import { motion } from "framer-motion";
+import { RoomName } from "./login";
 
 export let PlayerName: string;
 export let PlayerId: number;
@@ -24,6 +25,11 @@ export function Menu() {
       initial={{ opacity: 0, x: -200 }}
       animate={{ opacity: 1, x: 0 }}
     >
+      <Paragraph
+        className="flex justify-center mb-12"
+        text={`Room code: ${RoomName}`}
+        size="small"
+      />
       <Paragraph text="Enter player name" size="large" />
       <Input
         className="mt-2"

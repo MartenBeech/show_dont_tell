@@ -4,7 +4,7 @@ import { Button } from "../button";
 import { Paragraph } from "../paragraph";
 import { db } from "../../rest/auth";
 import { RoomName } from "./login";
-import { Room, StartGame } from "../../rest/room";
+import { DeleteAllPlayers, Room, StartGame } from "../../rest/room";
 import { GetImages } from "../../rest/storage";
 import { motion } from "framer-motion";
 
@@ -215,10 +215,22 @@ export function Host() {
       animate={{ opacity: 1, x: 0 }}
     >
       <Paragraph
+        className="flex justify-center mb-12"
+        text={`Room code: ${RoomName}`}
+        size="small"
+      />
+      <Paragraph
         className="mb-2"
         text={`Players in lobby: ${state.players.length}`}
         size="large"
       />
+      {state.players.length < 3 && (
+        <Paragraph
+          className="mb-2"
+          text={"(You need at least 3 players to start)"}
+          size="small"
+        />
+      )}
       <Button
         className="w-4/5"
         text="Start game"
@@ -234,13 +246,17 @@ export function Host() {
           <Paragraph className="mt-4" text={player} key={index} size="large" />
         );
       })}
-      {state.players.length < 3 && (
-        <Paragraph
-          className="mt-4"
-          text={"(You need at least 3 players to start)"}
+
+      {state.players.length ? (
+        <Button
+          className="mt-8 w-1/3"
+          text={"Delete all players"}
           size="small"
+          onClick={() => {
+            DeleteAllPlayers();
+          }}
         />
-      )}
+      ) : null}
     </motion.div>
   );
 }
