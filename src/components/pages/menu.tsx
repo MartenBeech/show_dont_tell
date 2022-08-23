@@ -20,7 +20,7 @@ export function Menu() {
   });
   return (
     <motion.div
-      className="flex flex-col justify-center items-center w-full h-screen"
+      className="flex flex-col justify-center items-center w-full min-h-screen"
       key={"menu"}
       initial={{ opacity: 0, x: -200 }}
       animate={{ opacity: 1, x: 0 }}

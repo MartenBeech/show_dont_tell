@@ -38,7 +38,7 @@ export function Login(props: loginProps) {
 
   return (
     <motion.div
-      className="flex w-full h-screen justify-center items-center"
+      className="flex w-full min-h-screen justify-center items-center"
       key={"login"}
       initial={{ opacity: 0, x: -200 }}
       animate={{ opacity: 1, x: 0 }}

@@ -186,7 +186,7 @@ export function Host() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col justify-center items-center w-full h-screen">
+        <div className="flex flex-col justify-center items-center w-full min-h-screen">
           <Paragraph
             className="mb-40 p-4"
             text={state.prompt.replace(
@@ -209,7 +209,7 @@ export function Host() {
     </motion.div>
   ) : (
     <motion.div
-      className="flex flex-col justify-center items-center w-full h-screen"
+      className="flex flex-col justify-center items-center w-full min-h-screen"
       key={"host1"}
       initial={{ opacity: 0, x: -200 }}
       animate={{ opacity: 1, x: 0 }}
