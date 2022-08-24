@@ -145,28 +145,36 @@ export function Player() {
             <>
               {state.gameVoting ? (
                 <div className="flex justify-center items-center flex-wrap">
-                  {revealedImagesState.map((image, index) => {
-                    if (image && !state.winnerChosen) {
-                      return (
-                        <img
-                          className="m-4 border cursor-pointer max-h-80 max-w-[40%]"
-                          key={index}
-                          src={image}
-                          onClick={() => {
-                            if (votingEnabled) {
-                              SetImageWinning({ imageWinning: index });
-                              const timer = setTimeout(
-                                () => NewPlayerTurn(),
-                                5000
-                              );
-                              setState({ ...state, winnerChosen: true });
-                              return () => clearTimeout(timer);
-                            }
-                          }}
-                        />
-                      );
-                    }
-                  })}
+                  {revealedImagesState.length || imagesState.length ? (
+                    revealedImagesState.map((image, index) => {
+                      if (image && !state.winnerChosen) {
+                        return (
+                          <img
+                            className="m-4 border cursor-pointer max-h-80 max-w-[40%]"
+                            key={index}
+                            src={image}
+                            onClick={() => {
+                              if (votingEnabled) {
+                                SetImageWinning({ imageWinning: index });
+                                const timer = setTimeout(
+                                  () => NewPlayerTurn(),
+                                  5000
+                                );
+                                setState({ ...state, winnerChosen: true });
+                                return () => clearTimeout(timer);
+                              }
+                            }}
+                          />
+                        );
+                      }
+                    })
+                  ) : (
+                    <Button
+                      className="w-4/5"
+                      text="Nobody wins!"
+                      onClick={() => NewPlayerTurn()}
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col justify-center items-center w-full">

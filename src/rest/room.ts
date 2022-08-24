@@ -149,7 +149,13 @@ export async function RestartGame() {
 
   await updateDoc(doc(colRef, RoomName), {
     gameStarted: false,
+    gameVoting: false,
+    imageWinning: -1,
+    imagesSubmitted: 0,
+    playerTurn: -1,
   });
+
+  DeleteFolder({ roomName: RoomName });
 }
 
 export async function CreateRoom() {

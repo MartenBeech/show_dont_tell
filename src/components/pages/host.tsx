@@ -141,72 +141,76 @@ export function Host() {
   });
 
   return state.gameStarted ? (
-    <motion.div
-      key={"host0"}
-      initial={{ opacity: 0, x: -200 }}
-      animate={{ opacity: 1, x: 0 }}
-    >
-      {state.gameVoting ? (
-        <div className="flex flex-col">
-          <div className="flex justify-center">
-            <Paragraph
-              text={state.prompt.replace(
-                "Judge",
-                state.players[state.playerTurn]
-              )}
-              size="large"
-            />
-          </div>
-          <div className="flex justify-center items-center flex-wrap">
-            {revealedImagesState.map((image, index) => {
-              if (image) {
-                if (imageWinning === -1) {
-                  return (
-                    <img
-                      className="m-4 border max-h-96 max-w-[45%]"
-                      key={index}
-                      src={image}
-                    />
-                  );
-                } else {
-                  return (
-                    <img
-                      className={`m-4 border max-h-96 max-w-[45%] ${
-                        imageWinning === index
-                          ? "border-green-500 border-4"
-                          : "opacity-25"
-                      }`}
-                      key={index}
-                      src={image}
-                    />
-                  );
-                }
-              }
-            })}
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center w-full min-h-screen">
-          <Paragraph
-            className="mb-40 p-4"
-            text={state.prompt.replace(
-              "Judge",
-              state.players[state.playerTurn]
-            )}
-            size="xl"
-          />
-          <Paragraph
-            className="mb-8"
-            text={`The Judge is ${state.players[state.playerTurn]}`}
-            size="xl"
-          />
-          <Paragraph
-            text={`${state.imagesSubmitted} images submitted`}
-            size="large"
-          />
-        </div>
+    <>
+      {state.playerTurn >= 0 && state.prompt && (
+        <motion.div
+          key={"host0"}
+          initial={{ opacity: 0, x: -200 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          {state.gameVoting ? (
+            <div className="flex flex-col">
+              <div className="flex justify-center">
+                <Paragraph
+                  text={state.prompt.replace(
+                    "Judge",
+                    state.players[state.playerTurn]
+                  )}
+                  size="large"
+                />
+              </div>
+              <div className="flex justify-center items-center flex-wrap">
+                {revealedImagesState.map((image, index) => {
+                  if (image) {
+                    if (imageWinning === -1) {
+                      return (
+                        <img
+                          className="m-4 border max-h-96 max-w-[45%]"
+                          key={index}
+                          src={image}
+                        />
+                      );
+                    } else {
+                      return (
+                        <img
+                          className={`m-4 border max-h-96 max-w-[45%] ${
+                            imageWinning === index
+                              ? "border-green-500 border-4"
+                              : "opacity-25"
+                          }`}
+                          key={index}
+                          src={image}
+                        />
+                      );
+                    }
+                  }
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col justify-center items-center w-full min-h-screen">
+              <Paragraph
+                className="mb-40 p-4"
+                text={state.prompt.replace(
+                  "Judge",
+                  state.players[state.playerTurn]
+                )}
+                size="xl"
+              />
+              <Paragraph
+                className="mb-8"
+                text={`The Judge is ${state.players[state.playerTurn]}`}
+                size="xl"
+              />
+              <Paragraph
+                text={`${state.imagesSubmitted} images submitted`}
+                size="large"
+              />
+            </div>
+          )}
+        </motion.div>
       )}
-    </motion.div>
+    </>
   ) : (
     <motion.div
       className="flex flex-col justify-center items-center w-full min-h-screen"
