@@ -144,6 +144,14 @@ export async function DeleteAllPlayers() {
   return players.length - 1;
 }
 
+export async function RestartGame() {
+  const colRef = collection(db, "rooms");
+
+  await updateDoc(doc(colRef, RoomName), {
+    gameStarted: false,
+  });
+}
+
 export async function CreateRoom() {
   const colRef = collection(db, "rooms");
   const room = await GetRoom();
@@ -170,5 +178,7 @@ export async function CreateRoom() {
       ],
       roomName: RoomName,
     });
+  } else {
+    RestartGame();
   }
 }
