@@ -1,6 +1,6 @@
 import { doc, getDoc, collection, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./auth";
-import { RoomName } from "../components/pages/login";
+import { RoomName } from "../components/pages/lobby";
 import { DeleteFolder, UploadImage } from "./storage";
 
 export interface Room {
@@ -22,6 +22,23 @@ export async function GetRoom(): Promise<Room> {
   if (docSnap.exists()) {
     const snapData = docSnap.data();
     returnValue = <Room>snapData;
+  }
+  return returnValue;
+}
+
+interface getRoomExistsProps {
+  roomName: string;
+}
+
+export async function GetRoomExists(
+  props: getRoomExistsProps
+): Promise<boolean> {
+  let returnValue = false;
+  const docRef = doc(db, "rooms", props.roomName);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    returnValue = true;
   }
   return returnValue;
 }
@@ -158,7 +175,11 @@ export async function RestartGame() {
   DeleteFolder({ roomName: RoomName });
 }
 
-export async function CreateRoom() {
+interface createRoomProps {
+  includeDefaultProps: boolean;
+}
+
+export async function CreateRoom(props: createRoomProps) {
   const colRef = collection(db, "rooms");
   const room = await GetRoom();
 
@@ -170,18 +191,20 @@ export async function CreateRoom() {
       imagesSubmitted: 0,
       playerTurn: -1,
       players: [],
-      prompts: [
-        "What tattoo could you imagine Judge getting?",
-        "Where do you see Judge in 10 years?",
-        "What could be Judge's favorite hobby?",
-        "What image best describes Judge's home country?",
-        "How would Judge dress up for a first date?",
-        "What should be Judge's new background wallpaper?",
-        "Judge would love to wear a t-shirt with this image printed on it.",
-        "What image would make Judge press super-like on Tinder?",
-        "What image best describes Judge whenever they go to the bar?",
-        "Judge the morning after going to a party.",
-      ],
+      prompts: props.includeDefaultProps
+        ? [
+            "What tattoo could you imagine Judge getting?",
+            "Where do you see Judge in 10 years?",
+            "What could be Judge's favorite hobby?",
+            "What image best describes Judge's home country?",
+            "How would Judge dress up for a first date?",
+            "What should be Judge's new background wallpaper?",
+            "Judge would love to wear a t-shirt with this image printed on it.",
+            "What image would make Judge press super-like on Tinder?",
+            "What image best describes Judge whenever they go to the bar?",
+            "Judge the morning after going to a party.",
+          ]
+        : [],
       roomName: RoomName,
     });
   } else {

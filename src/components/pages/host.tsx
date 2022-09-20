@@ -3,7 +3,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { Button } from "../button";
 import { Paragraph } from "../paragraph";
 import { db } from "../../rest/auth";
-import { RoomName } from "./login";
+import { RoomName } from "./lobby";
 import { DeleteAllPlayers, Room, StartGame } from "../../rest/room";
 import { GetImages } from "../../rest/storage";
 import { motion } from "framer-motion";
@@ -111,8 +111,12 @@ export function Host() {
         gameVoting = room.gameVoting;
         imageWinning = room.imageWinning;
         if (playerTurn != room.playerTurn) {
-          playerTurnChanged();
-          playerTurn = room.playerTurn;
+          if (prompts.length) {
+            playerTurnChanged();
+            playerTurn = room.playerTurn;
+          } else {
+            prompt = "That's all folks! You are out of prompts!";
+          }
         }
       }
       if (

@@ -15,7 +15,7 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { FileInput, Input } from "../input";
 import { Paragraph } from "../paragraph";
-import { RoomName } from "./login";
+import { RoomName } from "./lobby";
 import { PlayerName, PlayerId } from "./menu";
 
 let gameStarted = false;

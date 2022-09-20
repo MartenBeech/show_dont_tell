@@ -1,6 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
+import { Lobby } from "./components/pages/lobby";
 import { Login } from "./components/pages/login";
 import { Routing } from "./components/routing";
 
@@ -13,6 +14,7 @@ export enum ScreenSize {
 export function App() {
   const [token, setToken] = useState("");
   const [screenSize, setScreenSize] = useState({} as ScreenSize);
+  const [roomName, setRoomName] = useState("");
 
   useEffect(() => {
     updateScreenSize(window.innerWidth);
@@ -49,6 +51,8 @@ export function App() {
           <BrowserRouter>
             {!token ? (
               <Login setToken={setToken} />
+            ) : !roomName ? (
+              <Lobby setRoomName={setRoomName} />
             ) : (
               <div className="min-h-screen">
                 <Routing />

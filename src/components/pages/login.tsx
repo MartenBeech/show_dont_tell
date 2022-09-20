@@ -4,19 +4,15 @@ import { Auth } from "../../rest/auth";
 import { Paragraph } from "../paragraph";
 import { Input } from "../input";
 import { Button } from "../button";
-import { CreateRoom } from "../../rest/room";
 import { Icon } from "../icon";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-
-export let RoomName = "";
 
 interface loginProps {
   setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function Login(props: loginProps) {
-  const [roomName, setRoomName] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
@@ -28,8 +24,6 @@ export function Login(props: loginProps) {
     if (authenticated) {
       const buff = buffer.Buffer.from(`${password}`).toString("base64");
       const basicAuth = `Basic ${buff}`;
-      RoomName = roomName;
-      CreateRoom();
 
       const token = basicAuth;
       props.setToken(token);
@@ -46,12 +40,6 @@ export function Login(props: loginProps) {
       <div className="flex flex-col w-full items-center">
         <Paragraph className="mb-4" text="SHOW DON'T TELL" size="xl" />
         <Icon className="mb-8" />
-        <Paragraph text="Room name" size="large" />
-        <Input
-          className="mt-2"
-          onChange={(e) => setRoomName(e.target.value.toLocaleUpperCase())}
-          value={roomName}
-        />
         <form
           className="flex flex-col items-center w-full"
           onSubmit={(event) => {
@@ -65,27 +53,17 @@ export function Login(props: loginProps) {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-          {!roomName || !password ? (
+
+          <Link className="flex justify-center w-1/2 mt-8" to={"/lobby"}>
             <Button
-              className="mt-8"
               text="Log in"
               size="small"
-              width="1/2"
-              disabled
+              width="full"
+              onClick={() => {
+                handleSubmit();
+              }}
             />
-          ) : (
-            <Link className="flex justify-center w-full mt-8" to={"/"}>
-              <Button
-                text="Log in"
-                size="small"
-                width="1/2"
-                disabled={!roomName || !password}
-                onClick={() => {
-                  handleSubmit();
-                }}
-              />
-            </Link>
-          )}
+          </Link>
         </form>
       </div>
     </motion.div>

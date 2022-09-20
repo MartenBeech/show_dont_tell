@@ -5,7 +5,7 @@ import { Paragraph } from "../paragraph";
 import { Link } from "react-router-dom";
 import { LoginPlayer } from "../../rest/room";
 import { motion } from "framer-motion";
-import { RoomName } from "./login";
+import { RoomName } from "./lobby";
 
 export let PlayerName: string;
 export let PlayerId: number;

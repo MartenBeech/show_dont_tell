@@ -54,3 +54,27 @@ export function FileInput(props: fileInputProps) {
     </div>
   );
 }
+
+interface checkboxProps {
+  classname?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  value?: boolean;
+  size?: "large" | "small";
+}
+
+export function Checkbox(props: checkboxProps) {
+  return (
+    <input
+      className={`${props.classname} ${
+        props.size === "large"
+          ? "w-8 h-8"
+          : props.size === "small"
+          ? "w-4 h-4"
+          : "w-5 h-5"
+      }`}
+      type="checkbox"
+      onChange={props.onChange}
+      checked={props.value}
+    />
+  );
+}
