@@ -11,6 +11,7 @@ import {
   SubmitImage,
 } from "../../rest/room";
 import { GetImages } from "../../rest/storage";
+import { GetRandomPromptSuccessMessage } from "../../services/promptSuccessMsg";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { FileInput, Input } from "../input";
@@ -101,6 +102,7 @@ export function Player() {
 
       if (room?.gameStarted && !gameStarted) {
         gameStarted = true;
+        setSuccessMsgState("");
       }
       if (state.gameStarted) {
         gameVoting = room.gameVoting;
@@ -178,14 +180,55 @@ export function Player() {
                 </div>
               ) : (
                 <div className="flex flex-col justify-center items-center w-full">
-                  <Icon className="mb-20" />
+                  <Icon className="mb-12" />
+                  <Paragraph
+                    className="w-4/5"
+                    text="Press 'Start voting' when all players have submitted an image."
+                    size="small"
+                  />
                   <Button
+                    className="mb-8"
                     text="Start voting"
                     size="large"
                     width="2/3"
                     onClick={() => {
                       StartVoting();
+                      setSuccessMsgState("");
                     }}
+                  />
+                  <Paragraph
+                    className="w-4/5"
+                    text="Why don't you add some more prompts while you are waiting?"
+                    size="small"
+                  />
+                  <Input
+                    className="mt-2"
+                    onChange={(event) => {
+                      setState({ ...state, prompt: event.target.value });
+                      setSuccessMsgState("");
+                    }}
+                    placeholder="E.g. 'Where do you see Judge in 10 years?'"
+                    size="xs"
+                    value={state.prompt}
+                  />
+                  <div className="flex justify-center mt-4 w-full">
+                    <Button
+                      className="mb-4"
+                      text="Submit prompt"
+                      size="small"
+                      disabled={!state.prompt.length}
+                      width="1/2"
+                      onClick={() => {
+                        SubmitPrompt({ prompt: state.prompt });
+                        setState({ ...state, prompt: "" });
+                        setSuccessMsgState(GetRandomPromptSuccessMessage());
+                      }}
+                    />
+                  </div>
+                  <Paragraph
+                    className="flex justify-center w-4/5 text-custom-green"
+                    text={successMsgState}
+                    size="xs"
                   />
                 </div>
               )}
@@ -292,32 +335,7 @@ export function Player() {
               onClick={() => {
                 SubmitPrompt({ prompt: state.prompt });
                 setState({ ...state, prompt: "" });
-                const rnd = Math.floor(Math.random() * 10);
-                setSuccessMsgState(
-                  `Successfully submitted prompt.${
-                    rnd === 0
-                      ? " Good one!"
-                      : rnd === 1
-                      ? " Very funny!"
-                      : rnd === 2
-                      ? " Best one so far!"
-                      : rnd === 3
-                      ? " Literally a good prompt!"
-                      : rnd === 4
-                      ? " Super duper!"
-                      : rnd === 5
-                      ? " Woohoooo!"
-                      : rnd === 6
-                      ? " You did amazing!"
-                      : rnd === 7
-                      ? " We are all very proud of you!"
-                      : rnd === 8
-                      ? " Now give me another one!"
-                      : rnd === 9
-                      ? " I could never come up with that!"
-                      : ""
-                  }`
-                );
+                setSuccessMsgState(GetRandomPromptSuccessMessage());
               }}
             />
           </div>

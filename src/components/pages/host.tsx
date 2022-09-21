@@ -4,7 +4,13 @@ import { Button } from "../button";
 import { Paragraph } from "../paragraph";
 import { db } from "../../rest/auth";
 import { RoomName } from "./lobby";
-import { DeleteAllPlayers, Room, StartGame } from "../../rest/room";
+import {
+  DeleteAllPlayers,
+  DeletePrompt,
+  GetPrompts,
+  Room,
+  StartGame,
+} from "../../rest/room";
 import { GetImages } from "../../rest/storage";
 import { motion } from "framer-motion";
 
@@ -28,10 +34,15 @@ interface state {
   players: Array<string>;
 }
 
-export const playerTurnChanged = () => {
-  const rnd = Math.floor(Math.random() * (prompts.length - 1));
-  prompt = prompts[rnd];
-  prompts.splice(rnd, 1);
+export const playerTurnChanged = async () => {
+  prompts = await GetPrompts();
+  if (prompts.length) {
+    const rnd = Math.floor(Math.random() * (prompts.length - 1));
+    prompt = prompts[rnd];
+    DeletePrompt({ index: rnd });
+  } else {
+    prompt = "That's all folks! You are out of prompts!";
+  }
 };
 
 export function Host() {
@@ -111,12 +122,8 @@ export function Host() {
         gameVoting = room.gameVoting;
         imageWinning = room.imageWinning;
         if (playerTurn != room.playerTurn) {
-          if (prompts.length) {
-            playerTurnChanged();
-            playerTurn = room.playerTurn;
-          } else {
-            prompt = "That's all folks! You are out of prompts!";
-          }
+          playerTurnChanged();
+          playerTurn = room.playerTurn;
         }
       }
       if (

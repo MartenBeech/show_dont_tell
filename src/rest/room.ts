@@ -11,6 +11,7 @@ export interface Room {
   playerTurn: number;
   players: Array<string>;
   prompts: Array<string>;
+  promptsCached: Array<string>;
   roomName: string;
 }
 
@@ -81,6 +82,36 @@ export async function SubmitPrompt(props: createPrompt) {
   } else {
     prompts = [props.prompt];
   }
+
+  let promptsCached: Array<string>;
+  if (room.promptsCached) {
+    promptsCached = room.promptsCached;
+    promptsCached.push(props.prompt);
+  } else {
+    promptsCached = [props.prompt];
+  }
+
+  await updateDoc(doc(colRef, RoomName), {
+    prompts: prompts,
+    promptsCached: promptsCached,
+  });
+}
+
+export async function GetPrompts() {
+  const room = await GetRoom();
+  return room.prompts;
+}
+
+interface deletePromptProps {
+  index: number;
+}
+
+export async function DeletePrompt(props: deletePromptProps) {
+  const colRef = collection(db, "rooms");
+  const room = await GetRoom();
+
+  const prompts = room.prompts;
+  prompts.splice(props.index, 1);
 
   await updateDoc(doc(colRef, RoomName), {
     prompts: prompts,
